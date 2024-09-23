@@ -1,0 +1,15 @@
+version: '3.8'
+
+name: project-name
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../:/workspaces/dev
+      - /workspaces/dev/node_modules
+#    command: >
+#      bash -c "tail -f /dev/null
