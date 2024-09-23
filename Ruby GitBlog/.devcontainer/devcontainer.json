@@ -1,0 +1,17 @@
+{
+	"name": "GitBlog",
+	"dockerComposeFile": [
+		"./docker-compose.yml"
+	],
+	"service": "app",
+	"workspaceFolder": "/workspaces/dev",	
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"postCreateCommand": "bundle install --verbose",
+	"customizations": {
+		"vscode": {
+			"extensions": ["shd101wyy.markdown-preview-enhanced"]
+		}
+	}
+}
