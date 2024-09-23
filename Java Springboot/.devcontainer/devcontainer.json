@@ -1,0 +1,17 @@
+{
+  "name": "Project_Name",
+  "dockerComposeFile": [
+    "./docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspaces/app",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "forwardPorts": [8000],
+  "customizations": {
+    "jetbrains": {
+      "backend": "IntelliJ"
+    }
+  }
+}
