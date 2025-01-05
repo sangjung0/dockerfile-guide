@@ -1,0 +1,51 @@
+# Oracle XE 21c 공식 이미지 사용
+FROM oraclelinux:7-slim
+
+# 메타데이터
+LABEL version="1.0"
+LABEL description="Docker image for Oracle SQL Developer with OpenJDK 11"
+LABEL authors="sangj"
+
+# X 서버를 사용하기 위한 환경 설정
+ENV DISPLAY=host.docker.internal:0
+VOLUME [ "/tmp/.X11-unix" ]
+
+# 필요한 도구 설치
+RUN yum -y install libaio libXext libXrender libXtst xauth x11-apps gzip java-11-openjdk-devel freetype fontconfig dejavu-sans-fonts gtk2
+
+# JAVA_HOME 환경변수 설정
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# SQL Developer 설치 (RPM 패키지 사용)
+COPY sqldeveloper-21.4.3-063.0100.noarch.rpm /tmp/
+RUN yum -y localinstall /tmp/sqldeveloper-21.4.3-063.0100.noarch.rpm \
+    && rm /tmp/sqldeveloper-21.4.3-063.0100.noarch.rpm
+
+# Oracle Database XE 설치
+COPY oracle-database-xe-21c-1.0-1.ol7.x86_64.rpm /tmp/
+RUN yum -y localinstall /tmp/oracle-database-xe-21c-1.0-1.ol7.x86_64.rpm \
+    && rm /tmp/oracle-database-xe-21c-1.0-1.ol7.x86_64.rpm
+
+# JavaFX 다운로드 및 설치
+COPY openjfx-17.0.12_linux-x64_bin-sdk.zip /tmp/javafx-sdk.zip
+RUN unzip /tmp/javafx-sdk.zip -d /opt/ && \
+    rm /tmp/javafx-sdk.zip
+
+# 모든 JAR 파일을 CLASSPATH에 추가
+ENV CLASSPATH="/opt/javafx-sdk-17.0.12/lib/*"
+
+# GTK2 사용 설정
+ENV GDK_BACKEND=x11
+ENV GTK_MODULES=gail:atk-bridge
+
+WORKDIR /workspaces
+# COPY . /workspaces/app
+
+# Oracle Listener 및 DB 포트 노출
+# EXPOSE 1521
+# EXPOSE 8080
+
+# 컨테이너 시작 시 Oracle DB 및 SQL Developer 실행
+CMD ["/bin/bash", "-c", "/etc/init.d/oracle-xe-21c start && /opt/sqldeveloper/sqldeveloper.sh"]
+# CMD tail -f /dev/null

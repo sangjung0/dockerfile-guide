@@ -1,0 +1,14 @@
+{
+  "name": "database",
+  "dockerComposeFile": [
+    "./docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/dev",
+//  "forwardPorts": [1521, 8080],
+  "customizations": {
+    "jetbrains": {
+      "backend": "IntelliJ"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+version: '3.8'
+
+name: database
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: .
+      dockerfile: DockerfileDatabase
+    #    ports:
+    #      - "1521:1521"
+    #      - "8080:8000"
