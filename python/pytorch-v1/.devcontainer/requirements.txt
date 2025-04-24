@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+scikit-learn
+tqdm
+python-multipart
+python-dotenv
+
+# torch
+torch
+torchvision
+torchaudio
