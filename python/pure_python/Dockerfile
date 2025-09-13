@@ -14,7 +14,7 @@ RUN apt-get update \
     libgl1 \
     libsm6 \
     libxext6 \
-    libgthread-2.0.so.0 \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
