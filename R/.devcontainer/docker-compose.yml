@@ -1,0 +1,20 @@
+name: ${CONTAINER_NAME}
+services:
+    dev:
+        build:
+            context: ..
+            dockerfile: .devcontainer/Dockerfile
+            args:
+                CONTAINER_USER: ${CONTAINER_USER}
+                CONTAINER_UID: ${CONTAINER_UID}
+                CONTAINER_HOME: ${CONTAINER_HOME}
+                CONTAINER_WORK_DIR: ${CONTAINER_WORK_DIR}
+        environment:
+            CONTAINER_USER: ${CONTAINER_USER}
+            CONTAINER_UID: ${CONTAINER_UID}
+            CONTAINER_HOME: ${CONTAINER_HOME}
+            CONTAINER_WORK_DIR: ${CONTAINER_WORK_DIR}
+            TZ: ${TZ}
+        volumes:
+            - ../:${CONTAINER_WORK_DIR}
+        command: ["tail", "-f", "/dev/null"]

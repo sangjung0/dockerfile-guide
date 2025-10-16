@@ -1,0 +1,33 @@
+{
+	"name": "R",
+	"dockerComposeFile": "./docker-compose.yml",
+	"service": "dev",
+	"workspaceFolder": "/workspaces/dev",
+    "postCreateCommand": "",
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+                "rsip-vision.nvidia-smi-plus",
+                "ms-vscode.azurecli",
+                "esbenp.prettier-vscode",
+                "ms-toolsai.jupyter",
+                "njpwerner.autodocstri",
+                "formulahendry.code-runner",
+                "streetsidesoftware.code-spell-checker",
+                "naumovs.color-highlight",
+                "oderwat.indent-rainbow",
+                "visualstudioexptteam.vscodeintellicode",
+                "ionutvmi.path-autocomplete",
+                "foxundermoon.shell-format",
+                "gruntfuggly.todo-tree",
+                "editorconfig.editorconfig",
+                "jebbs.plantuml",
+                "claudineyqr.plantuml-snippets",
+                "reditorsupport.r"
+			]
+		}
+	}
+}
