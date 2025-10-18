@@ -1,26 +1,42 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "code-runner.runInTerminal": true,
     "code-runner.executorMap": {
         "python":"zsh -c 'set -a && source $workspaceRoot/.env && exec $workspaceRoot/.venv/bin/python -u $fullFileName'"
     },
-    "editor.wordWrap": "on",
-    "editor.wrappingIndent": "indent",
-    "jupyter.notebookFileRoot": "${workspaceFolder}",
-    "python.envFile": "${workspaceFolder}/.env",
-    "python.analysis.exclude": [
-        "**/.git",
-        "**/.data",
-        "**/.vscode",
-        "**/__pycache__",
-    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/.vscode": true,
+        "**/__pycache__": true,
+        "**/output": true,
+        "**/log": true,
+        "**/.venv/**": true
+    },
     "files.watcherExclude": {
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
         "**/.hg/store/**": true,
+        "**/.venv/**": true,
         "**/__pycache__/**": true,
     },
+    "python.analysis.exclude": [
+        "**/.git",
+        "**/.vscode",
+        "**/__pycache__",
+        "**/.venv",
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.envFile": "${workspaceFolder}/.env",
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
     // Editor
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
     "editor.fontFamily": "JetBrains Mono, D2Coding",
     "editor.fontLigatures": true,
     "editor.fontSize": 18,

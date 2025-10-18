@@ -1,6 +1,0 @@
-name: Python
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile

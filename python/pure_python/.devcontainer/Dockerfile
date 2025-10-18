@@ -1,37 +1,44 @@
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.8.1-cudnn-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-lc"]
 
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     git \
     sudo \
     zsh \
     curl \
-    # Xserver
-    libx11-dev \
-    libgl1 \
-    libsm6 \
-    libxext6 \
-    libglib2.0-0 \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /root
+ARG CONTAINER_USER
+ARG CONTAINER_UID
+ARG CONTAINER_HOME
 
-RUN curl -LsSf https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
-ARG OHMYZSH_THEME=/root/.oh-my-zsh/custom/themes
+# LOAD SCRIPT
+COPY .devcontainer/sh-utils /tmp/scripts
+RUN chmod -R +x /tmp/scripts/*.sh
 
-RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${OHMYZSH_THEME}/powerlevel10k && \
-    sed -i 's|ZSH_THEME="devcontainers"|ZSH_THEME="powerlevel10k/powerlevel10k"|g' .zshrc && \
-    echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> .zshrc
+# ADD USER AND SETUP ZSH
+RUN /tmp/scripts/add_user_and_setup_sudo.sh ${CONTAINER_USER} ${CONTAINER_UID}
+RUN /tmp/scripts/setup_zsh.sh ${CONTAINER_USER} ${CONTAINER_UID}
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-RUN echo 'alias ls="ls -lsaF"' >> .zshrc
-RUN chsh -s /bin/zsh root
+RUN sudo -u ${CONTAINER_USER} curl -LsSf https://astral.sh/uv/install.sh | sudo -u ${CONTAINER_USER} sh
+RUN sudo -u ${CONTAINER_USER} -H env PATH="${CONTAINER_HOME}/.local/bin:$PATH"
 
-# Xserver
-ENV DISPLAY host.docker.internal:0.0
+ARG CONTAINER_WORK_DIR
+WORKDIR ${CONTAINER_WORK_DIR}
+COPY pyproject.toml uv.lock ${CONTAINER_WORK_DIR}/
 
-CMD ["tail", "-f", "/dev/null"]
+RUN install -d -o ${CONTAINER_UID} -g ${CONTAINER_UID} ${CONTAINER_WORK_DIR}/.venv ${CONTAINER_HOME}
 
+ARG CONTAINER_UV_GROUP
+RUN chown -R ${CONTAINER_UID}:${CONTAINER_UID} ${CONTAINER_WORK_DIR} ${CONTAINER_HOME}
+RUN sudo -u ${CONTAINER_USER} -H bash -lc "/tmp/scripts/setup_uv.sh ${CONTAINER_WORK_DIR} ${CONTAINER_HOME} ${CONTAINER_UV_GROUP}"
+
+RUN rm -f ${CONTAINER_WORK_DIR}/pyproject.toml ${CONTAINER_WORK_DIR}/uv.lock /tmp/* || true
+
+USER ${CONTAINER_USER}
+ENV VIRTUAL_ENV="${CONTAINER_WORK_DIR}/.venv"
+ENV PATH="${CONTAINER_WORK_DIR}/.venv/bin:${PATH}"
